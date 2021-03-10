@@ -2,15 +2,15 @@ DROP TABLE IF EXISTS catalogs;
 CREATE TABLE catalogs(
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(255) 
-) COMMENT = 'Разделы интернет-магазина';
+) COMMENT = 'Sections of the online store';
 
 INSERT INTO catalogs(name) VALUES
-	('Процессоры'),
-	('Материнские платы'),
-	('Видеокарты'),
-	('Жесткие диски'),
-	('Оперативная память'),
-    ('Мониторы');
+	('Processors'),
+	('Motherboards'),
+	('Video cards'),
+	('Hard disks'),
+	('RAM'),
+    ('Monitors');
    
 DROP TRIGGER IF EXISTS watchlog_catalogs;
 delimiter //
@@ -27,18 +27,18 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(255),
-	birthday_at DATE COMMENT 'Дата рождения',
+	birthday_at DATE COMMENT 'Date of Birth',
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
 ) COMMENT = 'Покупатели';
 
 INSERT INTO users (name, birthday_at) VALUES
-	('Геннадий', '1990-07-07'),
-	('Алексей', '1995-08-05'),
-	('Виктор', '1975-02-12'),
-	('София', '1993-07-07'), 
-	('Наталья', '1971-08-05'),
-	('Ирина', '1983-02-12');
+	('Gennady', '1990-07-07'),
+	('Alexey', '1995-08-05'),
+	('Victor', '1975-02-12'),
+	('Sofia', '1993-07-07'),
+	('Natalia', '1971-08-05'),
+	('Irina', '1983-02-12');
 
 DROP TRIGGER IF EXISTS watchlog_users;
 delimiter //
@@ -61,20 +61,20 @@ CREATE TABLE products(
 	catalog_id INT UNSIGNED,
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) COMMENT = 'Товарные позиции';
+);
 
 CREATE INDEX index_of_catalog_id ON products (catalog_id);
 
 INSERT INTO products (name, description, price, catalog_id) VALUES
-	('Процессор AMD A6-7480 OEM', 'Процессор AMD A6-7480 OEM представляет собой сбалансированное', 2299, 1),
-	('Процессор Intel Celeron G5905 BOX', 'чип со сбалансированной производительностью', 3699, 1),
-	('Материнская плата ASRock H310CM-DVS', 'совместима с процессорами Intel LGA 1151-v2', 2799, 2),
-	('Материнская плата Esonic G41CPL3', 'использует в своей основе чипсет Intel G41', 4000, 2),
-	('GV-N210D3-1GI', 'Видеокарта GIGABYTE GeForce 210', 3299, 3),
-	('GV-N710D5-1GL Rev2.0', 'Видеокарта GIGABYTE GeForce GT 710', 3599, 3),
-	('HDWD105UZSVA', '500 ГБ Жесткий диск Toshiba P300', 2850, 4),
-	('ST1000DM010', '1 ТБ Жесткий диск Seagate 7200 BarraCuda', 3099, 4),
-	('R532G1601S1S-U', 'Оперативная память SODIMM AMD Radeon R5 Entertainment Series', 850, 5);
+	('AMD A6-7480 OEM processor', 'AMD A6-7480 OEM processor is balanced', 2299, 1),
+	('Intel Celeron G5905 BOX Processor', 'Performance Balanced Chip', 3699, 1),
+	('ASRock H310CM-DVS Motherboard', 'Compatible with Intel LGA 1151-v2 Processor', 2799, 2),
+	('Esonic G41CPL3 motherboard', 'is based on Intel G41 chipset', 4000, 2),
+	('GV-N210D3-1GI', 'GIGABYTE GeForce 210 Graphics Card', 3299, 3),
+	('GV-N710D5-1GL Rev2.0', 'GIGABYTE GeForce GT 710 Graphics Card', 3599, 3),
+	('HDWD105UZSVA', '500 GB Toshiba P300 Hard Drive', 2850, 4),
+	('ST1000DM010', '1 TB Seagate 7200 BarraCuda Hard Drive', 3099, 4),
+	('R532G1601S1S-U', 'AMD Radeon R5 Entertainment Series SODIMM RAM', 850, 5);
 
 CREATE OR REPLACE VIEW  name_prod AS
 	SELECT p.name AS product_name, c.name AS catalog_name
@@ -109,10 +109,10 @@ CREATE TABLE orders_products(
 	id SERIAL PRIMARY KEY,
 	order_id INT UNSIGNED,
 	product_id INT UNSIGNED,
-	total INT UNSIGNED DEFAULT 1 COMMENT 'Количество заказанных позиций',
+	total INT UNSIGNED DEFAULT 1 COMMENT 'Number of ordered items',
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) COMMENT = 'Состав заказа';
+) COMMENT = 'Order list';
 
 INSERT INTO orders_products(order_id, product_id, total) VALUES
 	(1, 1, 2),
@@ -138,7 +138,7 @@ CREATE TABLE discounts(
 	finished_at DATETIME,
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) COMMENT = 'Скидка';
+) COMMENT = 'Discount';
 
 INSERT INTO DISCOUNTS (user_id, product_id, discount, started_at, finished_at) VALUES 
 	(1, 1, 0.1, '2021-01-26', '2022-02-26'),
@@ -155,7 +155,7 @@ INSERT INTO DISCOUNTS (user_id, product_id, discount, started_at, finished_at) V
  	name VARCHAR(255),
  	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
  	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
- ) COMMENT = 'Склады';
+ ) COMMENT = 'Warehouses';
  
  DROP TABLE IF EXISTS storehouses_products;
  CREATE TABLE storehouses_products(
@@ -165,7 +165,7 @@ INSERT INTO DISCOUNTS (user_id, product_id, discount, started_at, finished_at) V
  	value INT UNSIGNED,
  	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
  	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
- ) COMMENT = 'Запасы на складе';
+ ) COMMENT = 'Stock in the warehouse';
  
  
  
